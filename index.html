@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Обратная связь</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #d0f0fd;
+            margin: 0;
+            padding: 20px 10px;
+            min-height: 100vh;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body.popup-open {
+            overflow: hidden;
+        }
+
+        .card,
+        .footer {
+            width: 100%;
+            max-width: 900px;
+            box-sizing: border-box;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .card h1 {
+            margin: 0 0 10px;
+            font-size: 28px;
+            color: #333;
+        }
+
+        .card p {
+            margin: 0 0 20px;
+            color: #555;
+        }
+
+        .footer {
+            margin-top: 20px;
+            padding: 15px;
+            text-align: center;
+            color: #6c757d;
+        }
+
+        .footer p {
+            margin: 0;
+        }
+
+        .button {
+            padding: 12px 24px;
+            font-size: 16px;
+            color: #fff;
+            background: #333;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .button:hover,
+        .button:focus {
+            background: #555;
+        }
+
+        .button:disabled {
+            background: #999;
+            cursor: default;
+        }
+
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            height: 100dvh;
+            box-sizing: border-box;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 1000;
+        }
+
+        .popup[hidden] {
+            display: none;
+        }
+
+        .popup__window {
+            position: relative;
+            width: 100%;
+            max-width: 440px;
+            max-height: 100%;
+            overflow-y: auto;
+            box-sizing: border-box;
+            padding: 24px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .popup__title {
+            margin: 0 30px 12px 0;
+            font-size: 22px;
+            color: #333;
+        }
+
+        .popup__close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            font-size: 24px;
+            line-height: 1;
+            color: #333;
+            background: transparent;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .popup__close:hover,
+        .popup__close:focus {
+            background: #eee;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .field input,
+        .field textarea {
+            padding: 8px 10px;
+            font: inherit;
+            font-size: 16px;
+            border: 1px solid #bbb;
+            border-radius: 6px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .field textarea {
+            height: 70px;
+            resize: none;
+        }
+
+        .consent {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .consent input {
+            margin: 2px 0 0;
+            flex-shrink: 0;
+        }
+
+        .status {
+            min-height: 18px;
+            margin: 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .status--ok {
+            color: #1b7f3b;
+        }
+
+        .status--error {
+            color: #c62828;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 20px;
+            }
+
+            .popup {
+                padding: 6px;
+            }
+
+            .popup__window {
+                padding: 14px;
+            }
+
+            .popup__title {
+                margin-bottom: 8px;
+                font-size: 18px;
+            }
+
+            .popup__close {
+                top: 6px;
+                right: 6px;
+            }
+
+            .form {
+                gap: 6px;
+            }
+
+            .field {
+                font-size: 12px;
+                gap: 2px;
+            }
+
+            .field input,
+            .field textarea {
+                padding: 6px 9px;
+            }
+
+            .field textarea {
+                height: 52px;
+            }
+
+            .consent {
+                font-size: 12px;
+            }
+
+            .status {
+                min-height: 16px;
+                font-size: 13px;
+            }
+
+            .button {
+                padding: 10px 16px;
+            }
+        }
+
+        @media (max-height: 560px) {
+            .field textarea {
+                height: 36px;
+            }
+
+            .popup__title {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <h1>Обратная связь</h1>
+        <p>Есть вопрос или предложение? Напишите нам, и мы ответим.</p>
+        <button class="button" id="open-form" type="button">Написать нам</button>
+    </main>
+
+    <footer class="footer">
+        <p>(с) Перетолчин Данил</p>
+    </footer>
+
+    <div class="popup" id="popup" role="dialog" aria-modal="true" aria-labelledby="popup-title" hidden>
+        <div class="popup__window">
+            <h2 class="popup__title" id="popup-title">Форма обратной связи</h2>
+            <button class="popup__close" id="close-form" type="button" aria-label="Закрыть">×</button>
+            <form class="form" id="feedback-form">
+                <label class="field">ФИО
+                    <input type="text" name="name" autocomplete="name" required>
+                </label>
+                <label class="field">Email
+                    <input type="email" name="email" autocomplete="email" required>
+                </label>
+                <label class="field">Телефон
+                    <input type="tel" name="phone" autocomplete="tel" pattern="\+?[0-9\s\-\(\)]{10,20}" title="Например: +7 900 123-45-67">
+                </label>
+                <label class="field">Организация
+                    <input type="text" name="organization" autocomplete="organization">
+                </label>
+                <label class="field">Сообщение
+                    <textarea name="message" rows="3" required></textarea>
+                </label>
+                <label class="consent">
+                    <input type="checkbox" id="consent" name="consent" required>
+                    <span>Согласен с политикой обработки персональных данных</span>
+                </label>
+                <p class="status" id="status" role="status" aria-live="polite"></p>
+                <button class="button" id="submit-button" type="submit">Отправить</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="form.js"></script>
+</body>
+</html>
