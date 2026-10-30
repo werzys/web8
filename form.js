@@ -1,4 +1,4 @@
-const FORM_URL = "https://formcarry.com/s/YOUR_FORM_ID";
+const FORM_URL = "https://formsubmit.co/ajax/banfast5@gmail.com";
 const STORAGE_KEY = "feedbackFormData";
 const POPUP_HASH = "#feedback";
 const FIELDS = ["name", "email", "phone", "organization", "message"];
@@ -109,14 +109,17 @@ function sendForm() {
         },
         body: JSON.stringify(collectData())
     }).then(function (response) {
-        return response.json();
-    }).then(function (result) {
-        if (result.code === 200) {
+        return response.json().then(function (result) {
+            return {ok: response.ok, result: result};
+        });
+    }).then(function (answer) {
+        const failed = answer.result.success === "false" || answer.result.success === false;
+        if (answer.ok && !failed) {
             form.reset();
             clearStorage();
             showStatus("Спасибо! Сообщение успешно отправлено.", "ok");
         } else {
-            showStatus("Ошибка отправки: " + (result.message || "сервер отклонил запрос."), "error");
+            showStatus("Ошибка отправки: " + (answer.result.message || "сервер отклонил запрос."), "error");
         }
     }).catch(function () {
         showStatus("Не удалось отправить форму. Проверьте соединение и попробуйте ещё раз.", "error");
