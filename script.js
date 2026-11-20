@@ -1,4 +1,4 @@
-/*jslint browser */
+
 
 const FORM_URL = "https://formcarry.com/s/l0IhXAVolyV";
 const STORAGE_KEY = "feedbackFormData";
